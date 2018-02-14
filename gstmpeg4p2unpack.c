@@ -490,7 +490,7 @@ static GstStateChangeReturn gst_mpeg4p2unpack_change_state(GstElement * element,
 	GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
 	GstMpeg4P2Unpack *self = GST_MPEG4P2UNPACK(element);
 
-	switch (transition) 
+	switch (transition)
 	{
 		case GST_STATE_CHANGE_NULL_TO_READY:
 			break;

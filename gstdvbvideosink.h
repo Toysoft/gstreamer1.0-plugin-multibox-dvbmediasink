@@ -65,40 +65,26 @@ typedef struct _GstDVBVideoSink		GstDVBVideoSink;
 typedef struct _GstDVBVideoSinkClass	GstDVBVideoSinkClass;
 typedef struct _GstDVBVideoSinkPrivate	GstDVBVideoSinkPrivate;
 
-typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_H265 } t_codec_type;
-#if defined(DREAMBOX)
+typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_H265, CT_SPARK, CT_VP6, CT_VP8, CT_VP9 } t_codec_type;
 typedef enum {
 	STREAMTYPE_UNKNOWN = -1,
 	STREAMTYPE_MPEG2 = 0,
 	STREAMTYPE_MPEG4_H264 = 1,
 	STREAMTYPE_H263 = 2,
+	STREAMTYPE_VC1 = 16,
 	STREAMTYPE_MPEG4_Part2 = 4,
+	STREAMTYPE_VC1_SM = 17,
 	STREAMTYPE_MPEG1 = 6,
 	STREAMTYPE_MPEG4_H265 = 7,
+	STREAMTYPE_VB8 = 8,
+	STREAMTYPE_VB9 = 9,
 	STREAMTYPE_XVID = 10,
 	STREAMTYPE_DIVX311 = 13,
 	STREAMTYPE_DIVX4 = 14,
 	STREAMTYPE_DIVX5 = 15,
-	STREAMTYPE_VC1 = 16,
-	STREAMTYPE_VC1_SM = 17
+	STREAMTYPE_VB6 = 18,
+	STREAMTYPE_SPARK = 21,
 } t_stream_type;
-#else
-typedef enum {
-	STREAMTYPE_UNKNOWN = -1,
-	STREAMTYPE_MPEG2 = 0,
-	STREAMTYPE_MPEG4_H264 = 1,
-	STREAMTYPE_H263 = 2,
-	STREAMTYPE_VC1 = 3,
-	STREAMTYPE_MPEG4_Part2 = 4,
-	STREAMTYPE_VC1_SM = 5,
-	STREAMTYPE_MPEG1 = 6,
-	STREAMTYPE_MPEG4_H265 = 7,
-	STREAMTYPE_XVID = 10,
-	STREAMTYPE_DIVX311 = 13,
-	STREAMTYPE_DIVX4 = 14,
-	STREAMTYPE_DIVX5 = 15
-} t_stream_type;
-#endif
 
 struct _GstDVBVideoSink
 {
@@ -108,27 +94,31 @@ struct _GstDVBVideoSink
 	int unlockfd[2];
 
 	gint h264_nal_len_size;
-	gboolean h264_initial_audelim_written;
 
 	GstBuffer *pesheader_buffer;
 
 	GstBuffer *codec_data;
 	t_codec_type codec_type;
 	t_stream_type stream_type;
+#if GST_VERSION_MAJOR >= 1
 	gboolean use_dts;
+#endif
+
+#ifdef PACK_UNPACKED_XVID_DIVX5_BITSTREAM
+	/* data needed to pack bitstream (divx5 / xvid) */
+	gint num_non_keyframes, time_inc_bits, time_inc;
+	gboolean must_pack_bitstream;
+	GstBuffer *prev_frame;
+#endif
 
 	char saved_fallback_framerate[16];
 
 	gdouble rate;
-	gboolean playing, paused, flushing, unlocking, flushed, first_paused;
-	gboolean using_dts_downmix;
+	gboolean playing, paused, flushing, unlocking;
 	gboolean pts_written;
 	gint64 lastpts;
 	gint64 timestamp_offset;
-	gboolean must_send_header, wmv_asf;
-	gint8 ok_to_write;
-
-	gboolean use_set_encoding;
+	gboolean must_send_header;
 
 	queue_entry_t *queue;
 };

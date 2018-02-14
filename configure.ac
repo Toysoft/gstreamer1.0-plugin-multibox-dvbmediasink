@@ -137,7 +137,6 @@ if test "$have_h265" = "yes"; then
 	AC_DEFINE([HAVE_H265],[1],[Define to 1 for h265 support])
 fi
 
-
 AC_ARG_WITH(h264,
 	AS_HELP_STRING([--with-h264],[support h264, yes or no]),
 	[have_h264=$withval],[have_h264=yes])
@@ -215,11 +214,44 @@ if test "$have_pcm" = "yes"; then
 	AC_DEFINE([HAVE_PCM],[1],[Define to 1 for PCM support])
 fi
 
+AC_ARG_WITH(maxpcmrate,
+	AS_HELP_STRING([--with-maxpcmrate],[Max PCM rate, default is 48000]),
+	[have_maxpcmrate=$withval],[have_maxpcmrate=48000])
+AC_DEFINE_UNQUOTED([MAX_PCM_RATE],["$have_maxpcmrate"],[Max PCM rate])
+
 AC_ARG_WITH(eac3,
 	AS_HELP_STRING([--with-eac3],[support E-AC3 / AC3+ / DDP, yes or no]),
 	[have_eac3=$withval],[have_eac3=no])
 if test "$have_eac3" = "yes"; then
 	AC_DEFINE([HAVE_EAC3],[1],[Define to 1 for E-AC3 support])
+fi
+
+AC_ARG_WITH(vb6,
+	AS_HELP_STRING([--with-vb6],[support VP6 , yes or no]),
+	[have_vb6=$withval],[have_vb6=no])
+if test "$have_vb6" = "yes"; then
+	AC_DEFINE([HAVE_VB6],[1],[Define to 1 for VB6 support])
+fi
+
+AC_ARG_WITH(vb8,
+	AS_HELP_STRING([--with-vb8],[support VP8 , yes or no]),
+	[have_vb8=$withval],[have_vb8=no])
+if test "$have_vb8" = "yes"; then
+	AC_DEFINE([HAVE_VB8],[1],[Define to 1 for VB8 support])
+fi
+
+AC_ARG_WITH(vb9,
+	AS_HELP_STRING([--with-vb9],[support VP9 , yes or no]),
+	[have_vb9=$withval],[have_vb9=no])
+if test "$have_vb9" = "yes"; then
+	AC_DEFINE([HAVE_VB9],[1],[Define to 1 for VB9 support])
+fi
+
+AC_ARG_WITH(spark,
+	AS_HELP_STRING([--with-spark],[support SPARK , yes or no]),
+	[have_spark=$withval],[have_spark=no])
+if test "$have_spark" = "yes"; then
+	AC_DEFINE([HAVE_SPARK],[1],[Define to 1 for SPARK support])
 fi
 
 AC_ARG_WITH(dtsdownmix,
@@ -228,35 +260,6 @@ AC_ARG_WITH(dtsdownmix,
 if test "$have_dtsdownmix" = "yes"; then
 	AC_DEFINE([HAVE_DTSDOWNMIX],[1],[Define to 1 for DTS downmix support])
 fi
-
-AC_ARG_WITH(vuplus,
-	AS_HELP_STRING([--with-vuplus],[build for vuplus, yes or no]),
-	[vuplus=$withval],[vuplus=no])
-if test "$vuplus" = "yes"; then
-	AC_DEFINE([VUPLUS],[1],[Define to 1 for vuplus ])
-fi
-
-AC_ARG_WITH(dreambox,
-	AS_HELP_STRING([--with-dreambox],[build for dreambox, yes or no]),
-	[dreambox=$withval],[dreambox=no])
-if test "$dreambox" = "yes"; then
-	AC_DEFINE([DREAMBOX],[1],[build for dreambox, yes or no ])
-fi
-
-AC_ARG_WITH(max_pcmrate_48K,
-	AS_HELP_STRING([--with-max-pcmrate-48K],[Max PCM rate 48K, yes or no]),
-	[max_pcmrate_48K=$withval],[max_pcmrate_48K=no])
-if test "$max_pcmrate_48K" = "yes"; then
-	AC_DEFINE([MAX_PCMRATE_48K],[1],[Max PCM rate 48K, yes or no ])
-fi
-
-AC_ARG_WITH(dags,
-	AS_HELP_STRING([--with-dags],[build for dags, yes or no]),
-	[dags=$withval],[dags=no])
-if test "$dags" = "yes"; then
-	AC_DEFINE([DAGS],[1],[build for dags, yes or no ])
-fi
-
 DTS_LIBS="-ldca $LIBM"
 AC_SUBST(DTS_LIBS)
 AM_CONDITIONAL(HAVE_DTSDOWNMIX, test "$have_dtsdownmix" = "yes")
